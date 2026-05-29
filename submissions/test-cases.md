@@ -54,11 +54,25 @@
 | Số sách đang mượn?        | < 3 (BVA: 0, 1, 2)  | MEM006 (0 sách)          | Cho phép mượn                    |
 |                           | = 3 (BVA: giới hạn) | MEM đã mượn 3 sách       | Từ chối, thông báo vượt giới hạn |
 
-### IDM — `<!-- Nhóm tự bổ sung cho REQ-05 đến REQ-08 -->`
+### IDM — Quản lý thành viên (REQ-07)
 
-| Đặc tính (Characteristic) | Phân vùng (Block) | Giá trị đại diện (Value) | Kết quả mong đợi |
-| ------------------------- | ----------------- | ------------------------ | ---------------- |
-| `<!-- Nhóm tự điền -->`   |                   |                          |                  |
+| Đặc tính (Characteristic)                        | Phân vùng (Block)                                               | Giá trị đại diện (Value)      | Kết quả mong đợi              |
+| :----------------------------------------------- | :-------------------------------------------------------------- | :---------------------------- | :---------------------------- |
+| **Định dạng Email**<br>_(Email format)_          | Hợp lệ (Có `@` và có `.` trong domain, bao gồm cả giá trị biên) | `newmember@test.com`, `a@b.c` | Chấp nhận, pass validate      |
+|                                                  | Không hợp lệ (Thiếu dấu `.` trong domain)                       | `user@domain`                 | Báo lỗi: Email không hợp lệ   |
+|                                                  | Không hợp lệ (Thiếu ký tự `@`)                                  | `usertest.com`                | Báo lỗi: Email không hợp lệ   |
+|                                                  | Không hợp lệ (Bỏ trống)                                         | `[Bỏ trống]`                  | Báo lỗi: Không được để trống  |
+| **Sự tồn tại của Email**<br>_(Email uniqueness)_ | Email chưa tồn tại trong DB                                     | `newmember@test.com`          | Chấp nhận, cho phép tạo       |
+|                                                  | Email đã tồn tại trong DB                                       | `ba.nguyen@email.com`         | Báo lỗi: Email đã tồn tại     |
+| **Định dạng Họ và tên**<br>_(Name format)_       | Hợp lệ                                                          | `Nguyễn Test`                 | Chấp nhận, pass validate      |
+|                                                  | Không hợp lệ (Bỏ trống)                                         | `[Bỏ trống]`                  | Báo lỗi: Yêu cầu điền đầy đủ  |
+| **Định dạng Số điện thoại**<br>_(Phone format)_  | Hợp lệ (Đúng 10 chữ số)                                         | `0912345678`, `0987654321`    | Chấp nhận, pass validate      |
+|                                                  | Không hợp lệ (Chứa chữ cái/ký tự đặc biệt) - **`SRS GAP`**      | `0987abc321`                  | Báo lỗi: Chỉ chấp nhận chữ số |
+|                                                  | Không hợp lệ (Bỏ trống)                                         | `[Bỏ trống]`                  | Báo lỗi: Yêu cầu điền đầy đủ  |
+| **Phân quyền truy cập**<br>_(Authorization)_     | Tài khoản có quyền (Thủ thư)                                    | Account: Thủ thư              | Cho phép truy cập, thêm mới   |
+|                                                  | Tài khoản không có quyền (Thành viên)                           | Account: Thành viên           | Chặn truy cập, báo lỗi quyền  |
+
+--- | | |
 
 > 💡 **Gợi ý kỹ thuật**: Sử dụng **Phân lớp tương đương (EP)** cho các phân vùng rời rạc, **Phân tích giá trị biên (BVA)** cho các phân vùng số (ví dụ: giới hạn 3 sách). Xem textbook §6.1–6.3.
 
